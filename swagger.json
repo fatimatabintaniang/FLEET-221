@@ -18,17 +18,338 @@
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
-    }
-  },
-  "security": [
-    {
-      "bearerAuth": []
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": [
+          "email",
+          "prenom",
+          "nom"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email de l'utilisateur",
+            "example": "fatima.doe@example.com"
+          },
+          "prenom": {
+            "type": "string",
+            "description": "Prénom de l'utilisateur",
+            "example": "fatima"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom de l'utilisateur",
+            "example": "niang"
+          }
+        }
+      },
+      "AuthRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email de l'utilisateur",
+            "example": "niang@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Mot de passe de l'utilisateur",
+            "example": "password123"
+          }
+        }
+      },
+      "Vehicule": {
+        "type": "object",
+        "required": [
+          "immatriculation",
+          "marque",
+          "modele",
+          "kilometrage"
+        ],
+        "properties": {
+         
+          "immatriculation": {
+            "type": "string",
+            "description": "Immatriculation du véhicule",
+            "example": "AB-123-CD"
+          },
+          "marque": {
+            "type": "string",
+            "description": "Marque du véhicule",
+            "example": "Renault"
+          },
+          "modele": {
+            "type": "string",
+            "description": "Modèle du véhicule",
+            "example": "Clio"
+          },
+          "kilometrage": {
+            "type": "integer",
+            "description": "Kilométrage du véhicule",
+            "example": 50000
+          }
+        },
+        "Chauffeur": {
+          "type": "object",
+          "required": [
+            "prenom",
+            "nom",
+            "email",
+            "numPermis",
+            "telephone"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "ID du chauffeur",
+              "example": 1
+            },
+            "prenom": {
+              "type": "string",
+              "description": "Prénom du chauffeur",
+              "example": "Jean"
+            },
+            "nom": {
+              "type": "string",
+              "description": "Nom du chauffeur",
+              "example": "Dupont"
+            },
+            "email": {
+              "type": "string",
+              "description": "Email du chauffeur",
+              "example": "jean.dupont@example.com"
+            },
+            "numPermis": {
+              "type": "string",
+              "description": "Numéro de permis du chauffeur",
+              "example": "PERMIS123"
+            },
+            "telephone": {
+              "type": "string",
+              "description": "Téléphone du chauffeur",
+              "example": "+33123456789"
+            }
+          }
+        },
+        "Mission": {
+          "type": "object",
+          "required": [
+            "chauffeurId",
+            "vehiculeId",
+            "destination",
+            "dateDepart",
+            "dateRetour"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "chauffeurId": {
+              "type": "integer",
+              "description": "ID du chauffeur assigné à la mission",
+              "example": 1
+            },
+            "vehiculeId": {
+              "type": "integer",
+              "description": "ID du véhicule assigné à la mission",
+              "example": 1
+            },
+            "destination": {
+              "type": "string",
+              "description": "Destination de la mission",
+              "example": "Paris"
+            },
+            "dateDepart": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date de départ de la mission",
+              "example": "2025-01-01T10:00:00Z"
+            },
+            "dateRetour": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date de retour de la mission",
+              "example": "2025-01-01T18:00:00Z"
+            }
+          }
+        },
+        "Maintenance": {
+          "type": "object",
+          "required": [
+            "vehiculeId",
+            "type",
+            "date",
+            "cout"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "ID de la maintenance",
+              "example": 1
+            },
+            "vehiculeId": {
+              "type": "integer",
+              "description": "ID du véhicule concerné",
+              "example": 1
+            },
+            "type": {
+              "type": "string",
+              "description": "Type de maintenance (ex: Vidange, Révision)",
+              "example": "Vidange"
+            },
+            "date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date de la maintenance",
+              "example": "2025-01-01T10:00:00Z"
+            },
+            "cout": {
+              "type": "number",
+              "description": "Coût de la maintenance",
+              "example": 50000
+            },
+            "description": {
+              "type": "string",
+              "description": "Description de la maintenance",
+              "example": "Changement filtre à huile"
+            }
+          }
+        }
+      },
+      "Maintenance": {
+        "type": "object",
+        "required": [
+          "vehiculeId",
+          "type",
+          "date",
+          "cout"
+        ],
+        "properties": {
+          "vehiculeId": {
+            "type": "integer",
+            "description": "ID du véhicule concerné",
+            "example": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Type de maintenance (ex: Vidange, Révision)",
+            "example": "Vidange"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date de la maintenance",
+            "example": "2025-01-01T10:00:00Z"
+          },
+          "cout": {
+            "type": "number",
+            "description": "Coût de la maintenance",
+            "example": 50000
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de la maintenance",
+            "example": "Changement filtre à huile"
+          }
+        }
+      },
+      "Mission": {
+        "type": "object",
+        "required": [
+          "chauffeurId",
+          "vehiculeId",
+          "destination",
+          "dateDepart",
+          "dateRetour"
+        ],
+        "properties": {
+         
+          "chauffeurId": {
+            "type": "integer",
+            "description": "ID du chauffeur assigné à la mission",
+            "example": 1
+          },
+          "vehiculeId": {
+            "type": "integer",
+            "description": "ID du véhicule assigné à la mission",
+            "example": 1
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination de la mission",
+            "example": "Paris"
+          },
+          "dateDepart": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date de départ de la mission",
+            "example": "2025-01-01T10:00:00Z"
+          },
+          "dateRetour": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date de retour de la mission",
+            "example": "2025-01-01T18:00:00Z"
+          }
+        }
+      },
+        "Chauffeur": {
+          "type": "object",
+          "required": [
+            "prenom",
+            "nom",
+            "email",
+            "numPermis",
+            "telephone"
+          ],
+          "properties": {
+            "prenom": {
+              "type": "string",
+              "description": "Prénom du chauffeur",
+              "example": "Jean"
+            },
+            "nom": {
+              "type": "string",
+              "description": "Nom du chauffeur",
+              "example": "Dupont"
+            },
+            "email": {
+              "type": "string",
+              "description": "Email du chauffeur",
+              "example": "niang@gmail.com"
+            },
+            "numPermis": {
+              "type": "string",
+              "description": "Numéro de permis du chauffeur",
+              "example": "PERM-123456"
+            },
+            "telephone": {
+              "type": "string",
+              "description": "Numéro de téléphone du chauffeur",
+              "example": "+221767298266"
+            }
+          }
+        }
+      
+      }
+      },
+      "security": [
+        {
+          "bearerAuth": []
     }
   ],
   "paths": {
     "/auth/register": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Créer un nouvel utilisateur",
         "security": [],
         "requestBody": {
@@ -36,25 +357,23 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": { "type": "string", "example": "admin@fleet221.com" },
-                  "password": { "type": "string", "example": "password123" },
-                  "prenom": { "type": "string", "example": "John" },
-                  "nom": { "type": "string", "example": "Doe" }
-                }
+                "$ref": "#/components/schemas/User"
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Utilisateur créé avec succès" }
+          "201": {
+            "description": "Utilisateur créé avec succès"
+          }
         }
       }
     },
     "/auth/login": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Connexion utilisateur",
         "security": [],
         "requestBody": {
@@ -62,162 +381,182 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": { "type": "string", "example": "admin@fleet221.com" },
-                  "password": { "type": "string", "example": "password123" }
-                }
+                "$ref": "#/components/schemas/AuthRequest"
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Connexion réussie avec token JWT" }
+          "200": {
+            "description": "Connexion réussie avec token JWT"
+          }
         }
       }
     },
     "/vehicules": {
       "get": {
-        "tags": ["Véhicules"],
+        "tags": [
+          "Véhicules"
+        ],
         "summary": "Obtenir tous les véhicules",
         "responses": {
-          "200": { "description": "Liste des véhicules" }
+          "200": {
+            "description": "Liste des véhicules"
+          }
         }
       },
       "post": {
-        "tags": ["Véhicules"],
+        "tags": [
+          "Véhicules"
+        ],
         "summary": "Créer un véhicule",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "immatriculation": { "type": "string", "example": "AA-123-BB" },
-                  "marque": { "type": "string", "example": "Renault" },
-                  "modele": { "type": "string", "example": "Clio" },
-                  "kilometrage": { "type": "integer", "example": 15000 }
-                }
+                "$ref": "#/components/schemas/Vehicule"
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Véhicule créé" }
+          "201": {
+            "description": "Véhicule créé"
+          }
         }
       }
     },
     "/vehicules/{id}": {
       "delete": {
-        "tags": ["Véhicules"],
+        "tags": [
+          "Véhicules"
+        ],
         "summary": "Supprimer un véhicule",
         "parameters": [
           {
             "in": "path",
             "name": "id",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
-          "200": { "description": "Véhicule supprimé" }
+          "200": {
+            "description": "Véhicule supprimé"
+          }
         }
       }
     },
     "/chauffeurs": {
       "get": {
-        "tags": ["Chauffeurs"],
+        "tags": [
+          "Chauffeurs"
+        ],
         "summary": "Obtenir tous les chauffeurs",
         "responses": {
-          "200": { "description": "Liste des chauffeurs" }
+          "200": {
+            "description": "Liste des chauffeurs"
+          }
         }
       },
       "post": {
-        "tags": ["Chauffeurs"],
+        "tags": [
+          "Chauffeurs"
+        ],
         "summary": "Créer un chauffeur",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "prenom": { "type": "string", "example": "Alice" },
-                  "nom": { "type": "string", "example": "Dupont" },
-                  "email": { "type": "string", "example": "alice@fleet221.com" },
-                  "numPermis": { "type": "string", "example": "PERM-789456" },
-                  "telephone": { "type": "string", "example": "0600000000" }
-                }
+                "$ref": "#/components/schemas/Chauffeur"
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Chauffeur créé" }
+          "201": {
+            "description": "Chauffeur créé"
+          }
         }
       }
     },
     "/chauffeurs/{id}": {
       "delete": {
-        "tags": ["Chauffeurs"],
+        "tags": [
+          "Chauffeurs"
+        ],
         "summary": "Supprimer un chauffeur",
         "parameters": [
           {
             "in": "path",
             "name": "id",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
-          "200": { "description": "Chauffeur supprimé" }
+          "200": {
+            "description": "Chauffeur supprimé"
+          }
         }
       }
     },
     "/missions": {
       "get": {
-        "tags": ["Missions"],
+        "tags": [
+          "Missions"
+        ],
         "summary": "Obtenir toutes les missions",
         "responses": {
-          "200": { "description": "Liste des missions" }
+          "200": {
+            "description": "Liste des missions"
+          }
         }
       },
       "post": {
-        "tags": ["Missions"],
+        "tags": [
+          "Missions"
+        ],
         "summary": "Planifier une mission",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "chauffeurId": { "type": "integer", "example": 1 },
-                  "vehiculeId": { "type": "integer", "example": 1 },
-                  "destination": { "type": "string", "example": "Dakar" },
-                  "dateDepart": { "type": "string", "format": "date-time", "example": "2026-05-01T10:00:00Z" },
-                  "dateRetour": { "type": "string", "format": "date-time", "example": "2026-05-03T18:00:00Z" }
-                }
+                "$ref": "#/components/schemas/Mission"
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Mission planifiée" }
+          "201": {
+            "description": "Mission planifiée"
+          }
         }
       }
     },
     "/maintenances": {
       "get": {
-        "tags": ["Maintenances"],
+        "tags": [
+          "Maintenances"
+        ],
         "summary": "Obtenir toutes les maintenances",
         "responses": {
-          "200": { "description": "Liste des maintenances" }
+          "200": {
+            "description": "Liste des maintenances"
+          }
         }
       },
       "post": {
-        "tags": ["Maintenances"],
+        "tags": [
+          "Maintenances"
+        ],
         "summary": "Enregistrer une maintenance",
         "requestBody": {
           "required": true,
@@ -226,18 +565,36 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "vehiculeId": { "type": "integer", "example": 1 },
-                  "type": { "type": "string", "example": "Vidange" },
-                  "date": { "type": "string", "format": "date-time", "example": "2025-01-01T10:00:00Z" },
-                  "cout": { "type": "number", "example": 50000 },
-                  "description": { "type": "string", "example": "Changement filtre à huile" }
+                  "vehiculeId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "Vidange"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-01-01T10:00:00Z"
+                  },
+                  "cout": {
+                    "type": "number",
+                    "example": 50000
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Changement filtre à huile"
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Maintenance enregistrée" }
+          "201": {
+            "description": "Maintenance enregistrée"
+          }
         }
       }
     }
