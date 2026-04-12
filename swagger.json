@@ -1,0 +1,245 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FLEET 221 API",
+    "description": "API pour la gestion d'un parc automobile",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Serveur local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Créer un nouvel utilisateur",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "admin@fleet221.com" },
+                  "password": { "type": "string", "example": "password123" },
+                  "prenom": { "type": "string", "example": "John" },
+                  "nom": { "type": "string", "example": "Doe" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Utilisateur créé avec succès" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Connexion utilisateur",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "admin@fleet221.com" },
+                  "password": { "type": "string", "example": "password123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Connexion réussie avec token JWT" }
+        }
+      }
+    },
+    "/vehicules": {
+      "get": {
+        "tags": ["Véhicules"],
+        "summary": "Obtenir tous les véhicules",
+        "responses": {
+          "200": { "description": "Liste des véhicules" }
+        }
+      },
+      "post": {
+        "tags": ["Véhicules"],
+        "summary": "Créer un véhicule",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "immatriculation": { "type": "string", "example": "AA-123-BB" },
+                  "marque": { "type": "string", "example": "Renault" },
+                  "modele": { "type": "string", "example": "Clio" },
+                  "kilometrage": { "type": "integer", "example": 15000 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Véhicule créé" }
+        }
+      }
+    },
+    "/vehicules/{id}": {
+      "delete": {
+        "tags": ["Véhicules"],
+        "summary": "Supprimer un véhicule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Véhicule supprimé" }
+        }
+      }
+    },
+    "/chauffeurs": {
+      "get": {
+        "tags": ["Chauffeurs"],
+        "summary": "Obtenir tous les chauffeurs",
+        "responses": {
+          "200": { "description": "Liste des chauffeurs" }
+        }
+      },
+      "post": {
+        "tags": ["Chauffeurs"],
+        "summary": "Créer un chauffeur",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prenom": { "type": "string", "example": "Alice" },
+                  "nom": { "type": "string", "example": "Dupont" },
+                  "email": { "type": "string", "example": "alice@fleet221.com" },
+                  "numPermis": { "type": "string", "example": "PERM-789456" },
+                  "telephone": { "type": "string", "example": "0600000000" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Chauffeur créé" }
+        }
+      }
+    },
+    "/chauffeurs/{id}": {
+      "delete": {
+        "tags": ["Chauffeurs"],
+        "summary": "Supprimer un chauffeur",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Chauffeur supprimé" }
+        }
+      }
+    },
+    "/missions": {
+      "get": {
+        "tags": ["Missions"],
+        "summary": "Obtenir toutes les missions",
+        "responses": {
+          "200": { "description": "Liste des missions" }
+        }
+      },
+      "post": {
+        "tags": ["Missions"],
+        "summary": "Planifier une mission",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chauffeurId": { "type": "integer", "example": 1 },
+                  "vehiculeId": { "type": "integer", "example": 1 },
+                  "destination": { "type": "string", "example": "Dakar" },
+                  "dateDepart": { "type": "string", "format": "date-time", "example": "2026-05-01T10:00:00Z" },
+                  "dateRetour": { "type": "string", "format": "date-time", "example": "2026-05-03T18:00:00Z" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Mission planifiée" }
+        }
+      }
+    },
+    "/maintenances": {
+      "get": {
+        "tags": ["Maintenances"],
+        "summary": "Obtenir toutes les maintenances",
+        "responses": {
+          "200": { "description": "Liste des maintenances" }
+        }
+      },
+      "post": {
+        "tags": ["Maintenances"],
+        "summary": "Enregistrer une maintenance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vehiculeId": { "type": "integer", "example": 1 },
+                  "type": { "type": "string", "example": "Vidange" },
+                  "date": { "type": "string", "format": "date-time", "example": "2025-01-01T10:00:00Z" },
+                  "cout": { "type": "number", "example": 50000 },
+                  "description": { "type": "string", "example": "Changement filtre à huile" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Maintenance enregistrée" }
+        }
+      }
+    }
+  }
+}

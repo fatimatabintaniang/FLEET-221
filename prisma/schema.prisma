@@ -1,0 +1,90 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VehiculeStatut {
+  DISPONIBLE
+  EN_MISSION
+  EN_MAINTENANCE
+}
+
+enum MissionStatut {
+  PLANIFIEE
+  EN_COURS
+  TERMINEE
+  ANNULEE
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nom       String
+  prenom    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Vehicule {
+  id            Int              @id @default(autoincrement())
+  immatriculation String          @unique @map("immatriculation")
+  marque        String
+  modele        String
+  kilometrage   Int              @default(0)
+  statut        VehiculeStatut   @default(DISPONIBLE)
+  
+  missions      Mission[]
+  maintenances  Maintenance[]
+  
+  @@map("vehicules")
+}
+
+model Chauffeur {
+  id            Int              @id @default(autoincrement())
+  prenom        String
+  nom           String
+  numPermis     String           @unique @map("num_permis")
+  telephone     String           @unique
+  email         String           @unique
+  
+  missions      Mission[]
+  
+  @@map("chauffeurs")
+}
+
+model Mission {
+  id            Int              @id @default(autoincrement())
+  chauffeurId   Int              @map("chauffeur_id")
+  vehiculeId    Int              @map("vehicule_id")
+  destination   String
+  dateDepart    DateTime         @map("date_depart") @db.Timestamptz
+  dateRetour    DateTime         @map("date_retour") @db.Timestamptz
+  statut        MissionStatut    @default(PLANIFIEE)
+  
+  chauffeur     Chauffeur        @relation(fields: [chauffeurId], references: [id])
+  vehicule      Vehicule         @relation(fields: [vehiculeId], references: [id])
+  
+  @@unique([chauffeurId, dateDepart, dateRetour])
+  @@unique([vehiculeId, dateDepart, dateRetour])
+  @@map("missions")
+}
+
+model Maintenance {
+  id            Int              @id @default(autoincrement())
+  vehiculeId    Int              @map("vehicule_id")
+  type          String
+  date          DateTime         @db.Date
+  cout          Float            @default(0)
+  description   String?
+  
+  vehicule      Vehicule         @relation(fields: [vehiculeId], references: [id])
+  
+  @@map("maintenances")
+}
