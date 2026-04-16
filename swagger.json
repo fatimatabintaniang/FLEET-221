@@ -24,6 +24,7 @@
         "type": "object",
         "required": [
           "email",
+          "password",
           "prenom",
           "nom"
         ],
@@ -32,6 +33,11 @@
             "type": "string",
             "description": "Email de l'utilisateur",
             "example": "fatima.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Mot de passe de l'utilisateur",
+            "example": "password123"
           },
           "prenom": {
             "type": "string",

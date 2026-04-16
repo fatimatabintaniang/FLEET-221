@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .  # Construit l'image depuis le Dockerfile du dossier courant
+    container_name: fleet221-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy  #  Attend que la DB soit VRAIMENT prête avant de démarrer
+    restart: unless-stopped    # Redémarre automatiquement si le conteneur crash
+
+  db:
+    image: postgres:15-alpine
+    container_name: fleet221-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}  
+      POSTGRES_DB: FLEET_221
+    ports:
+      - "8000:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]  # Vérifie que Postgres accepte des connexions
+      interval: 5s # Vérifie toutes les 5 secondes
+      timeout: 5s  # Timeout si pas de réponse en 5s
+      retries: 5 # Considère la DB comme "down" après 5 échecs consécutifs
+
+volumes:
+  postgres_data: # Volume pour persister les données de la base de données, même si le conteneur est supprimé

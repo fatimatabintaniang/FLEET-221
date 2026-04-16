@@ -1,5 +1,5 @@
 const Joi = require('joi');
-
+// permet de valider les données d'entrée des requêtes HTTP en utilisant des schémas de validation définis avec Joi.
 const validate = (schema) => (req, res, next) => {
   const { value, error } = schema.validate(req.body, { abortEarly: false });
 
