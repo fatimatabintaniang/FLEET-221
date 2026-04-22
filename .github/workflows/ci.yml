@@ -34,6 +34,5 @@ jobs:
           build-args: | # Arguments de construction, notamment pour passer le mot de passe de la base de données
             DB_PASSWORD=${{ secrets.DB_PASSWORD }} # Utilise une variable d'environnement secrète pour le mot de passe de la base de données
 
-      -
 
     
