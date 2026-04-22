@@ -1,6 +1,7 @@
 services:
   app:
     build: .  # Construit l'image depuis le Dockerfile du dossier courant
+    image: ${DOCKER_USERNAME}/fleet221-api:${TAG:-latest}  # Utilise une variable d'environnement pour le tag, avec "latest" par défaut
     container_name: fleet221-api
     ports:
       - "3000:3000"
@@ -8,7 +9,7 @@ services:
       - .env
     depends_on:
       db:
-        condition: service_healthy  #  Attend que la DB soit VRAIMENT prête avant de démarrer
+        condition: service_healthy  
     restart: unless-stopped    # Redémarre automatiquement si le conteneur crash
 
   db:
