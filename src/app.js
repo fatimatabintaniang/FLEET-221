@@ -47,7 +47,7 @@ const PORT = process.env.PORT || 3000;
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
-    console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+    console.log(`Swagger docs available at "${process.env.BASE_URL}:${PORT}/api-docs"`);
   });
 }
 
