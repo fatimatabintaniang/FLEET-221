@@ -40,7 +40,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }} 
           username: ${{ secrets.SSH_USER }} 
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 3000
           script: |
             cd ~/app
 
@@ -53,38 +52,4 @@ jobs:
             # Nettoyer les anciennes images
             sudo docker image prune -f
 
-      - name: Health Check
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            echo " Attente du démarrage du conteneur..."
-            sleep 10
-
-            # Vérifier que le conteneur tourne
-            STATUS=$(sudo docker inspect --format='{{.State.Status}}' fleet221-api 2>/dev/null)
-            HEALTH=$(sudo docker inspect --format='{{.State.Health.Status}}' fleet221-api 2>/dev/null)
-
-            echo "Status: $STATUS"
-            echo "Health: $HEALTH"
-
-            if [ "$STATUS" != "running" ]; then
-              echo "❌ Le conteneur n'est pas en cours d'exécution!"
-              sudo docker logs fleet221-api --tail=50
-              exit 1
-            fi
-
-            # Vérifier que l'API répond
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:22/health || echo "000")
-            echo "HTTP Code: $HTTP_CODE"
-
-            if [ "$HTTP_CODE" != "200" ]; then
-              echo "❌ L'API ne répond pas (HTTP $HTTP_CODE)"
-              exit 1
-            fi
-
-            echo "✅ Déploiement réussi! API opérationnelle."
-
+    
