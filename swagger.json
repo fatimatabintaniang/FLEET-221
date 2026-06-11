@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "FLEET 221 API",
-    "description": "API pour la gestion d'un parc automobile TESTTT",
+    "description": "API pour la gestion d'un parc automobile TEST",
     "version": "1.0.0"
   },
     "servers": [

@@ -1,5 +1,4 @@
-
-name: Build ,Push and Deploy Docker Image
+name: Build, Push and Deploy Docker Image
 
 on:
   push:
@@ -30,11 +29,9 @@ jobs:
           push: true 
           tags: ${{ secrets.DOCKER_USERNAME }}/fleet221-api:latest
 
-
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push 
-
     steps:
       
       - name: Deploy to Server via SSH
@@ -42,19 +39,72 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }} 
           username: ${{ secrets.SSH_USER }} 
-          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd ~/app 
-            
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fleet221-api:latest 
-            
-            sudo docker compose up -d --no-deps --force-recreate api 
-            
-            sudo docker image prune -f 
+            # Installer docker compose V2 si pas présent
+            if ! docker compose version &>/dev/null; then
+              sudo apt-get update -y
+              sudo apt-get install -y docker-compose-plugin
+            fi
 
+            cd ~/app
 
+            # Pull la nouvelle image
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fleet221-api:latest
 
+            # Lancer le conteneur
+            sudo docker compose up -d --no-deps --force-recreate api
 
+            # Nettoyer les anciennes images
+            sudo docker image prune -f
 
+      - name: Health Check
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            sleep 10
+            STATUS=$(sudo docker inspect --format='{{.State.Status}}' fleet221-api 2>/dev/null)
+            echo "Status: $STATUS"
+            if [ "$STATUS" != "running" ]; then
+              echo "❌ Conteneur non démarré!"
+              sudo docker logs fleet221-api --tail=50
+              exit 1
+            fi
+            echo "✅ Conteneur opérationnel!"
 
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build-and-push, deploy]
+    if: always()
+    steps:
+
+      - name: Notify Success
+        if: needs.deploy.result == 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ✅ Déploiement RÉUSSI!
+            📦 Repo: ${{ github.repository }}
+            🌿 Branch: ${{ github.ref_name }}
+            👤 Par: ${{ github.actor }}
+            🔗 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Notify Failure
+        if: needs.deploy.result == 'failure'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ❌ Déploiement ÉCHOUÉ!
+            📦 Repo: ${{ github.repository }}
+            🌿 Branch: ${{ github.ref_name }}
+            👤 Par: ${{ github.actor }}
+            🔗 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
