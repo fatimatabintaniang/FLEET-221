@@ -1,5 +1,5 @@
 
-name: Build and Push Docker Image
+name: Build ,Push and Deploy Docker Image
 
 on:
   push:
@@ -29,4 +29,25 @@ jobs:
           context: .
           push: true 
           tags: ${{ secrets.DOCKER_USERNAME }}/fleet221-api:${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }} 
+
+
+deploy:
+    needs: build-and-push 
+    runs-on: ubuntu-latest 
+    steps:
+      
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v0.1.5 
+        with:
+          host: ${{ secrets.SERVER_HOST }} 
+          username: ${{ secrets.SERVER_USER }} 
+          key: ${{ secrets.SERVER_SSH_KEY }} 
+          script: |
+            cd ~/app
+            
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fleet221-api:latest
+            
+            sudo docker compose up -d --no-deps --force-recreate api
+            
+            sudo docker image prune -f
           
