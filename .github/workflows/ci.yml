@@ -59,7 +59,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 3000
+          port: 22
           script: |
             echo " Attente du démarrage du conteneur..."
             sleep 10
@@ -78,7 +78,7 @@ jobs:
             fi
 
             # Vérifier que l'API répond
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/health || echo "000")
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:22/health || echo "000")
             echo "HTTP Code: $HTTP_CODE"
 
             if [ "$HTTP_CODE" != "200" ]; then
