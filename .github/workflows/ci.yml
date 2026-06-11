@@ -38,7 +38,7 @@ jobs:
     steps:
       
       - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@v0.1.5  // utilise une action GitHub pour exécuter des commandes SSH sur le serveur de production
+        uses: appleboy/ssh-action@v0.1.5  
         with:
           host: ${{ secrets.SSH_HOST }} 
           username: ${{ secrets.SSH_USER }} 
@@ -46,9 +46,9 @@ jobs:
           script: |
             cd ~/app 
             
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fleet221-api:latest // télécharge la dernière image de l'API depuis Docker Hub
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fleet221-api:latest 
             
-            sudo docker compose up -d --no-deps --force-recreate api // redémarre uniquement le service "api" pour appliquer les changements sans affecter les autres services
+            sudo docker compose up -d --no-deps --force-recreate api 
             
-            sudo docker image prune -f // permet de supprimer les images inutilisées pour libérer de l'espace
+            sudo docker image prune -f 
           
