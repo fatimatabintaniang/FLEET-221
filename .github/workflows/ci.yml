@@ -83,28 +83,58 @@ jobs:
     if: always()
     steps:
 
-      - name: Notify Success
+      - name: Notify Success by Email
         if: needs.deploy.result == 'success'
-        uses: appleboy/telegram-action@master
+        uses: dawidd6/action-send-mail@v3
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            ✅ Déploiement RÉUSSI!
-            📦 Repo: ${{ github.repository }}
-            🌿 Branch: ${{ github.ref_name }}
-            👤 Par: ${{ github.actor }}
-            🔗 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          to: ${{ secrets.MAIL_TO }}
+          from: "FLEET 221 <${{ secrets.MAIL_USERNAME }}>"
+          subject: "✅ Déploiement RÉUSSI - ${{ github.repository }}"
+          body: |
+            Bonjour,
 
-      - name: Notify Failure
+            Le déploiement de FLEET 221 a été effectué avec succès.
+
+            Détails :
+            - Repository : ${{ github.repository }}
+            - Branche    : ${{ github.ref_name }}
+            - Commit     : ${{ github.sha }}
+            - Déclenché  : ${{ github.actor }}
+
+            Voir les logs :
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Cordialement,
+            FLEET 221 CI/CD
+
+      - name: Notify Failure by Email
         if: needs.deploy.result == 'failure'
-        uses: appleboy/telegram-action@master
+        uses: dawidd6/action-send-mail@v3
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            ❌ Déploiement ÉCHOUÉ!
-            📦 Repo: ${{ github.repository }}
-            🌿 Branch: ${{ github.ref_name }}
-            👤 Par: ${{ github.actor }}
-            🔗 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          to: ${{ secrets.MAIL_TO }}
+          from: "FLEET 221 <${{ secrets.MAIL_USERNAME }}>"
+          subject: "❌ Déploiement ÉCHOUÉ - ${{ github.repository }}"
+          body: |
+            Bonjour,
+
+            Le déploiement de FLEET 221 a échoué.
+
+            Détails :
+            - Repository : ${{ github.repository }}
+            - Branche    : ${{ github.ref_name }}
+            - Commit     : ${{ github.sha }}
+            - Déclenché  : ${{ github.actor }}
+
+            Voir les logs :
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Cordialement,
+            FLEET 221 CI/CD
