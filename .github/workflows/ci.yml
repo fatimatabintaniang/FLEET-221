@@ -137,4 +137,4 @@ jobs:
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             Cordialement,
-            FLEET 221 API REST CI/CD
+            FLEET 221  CI/CD
